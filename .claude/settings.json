@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-ChildItem \"c:\\\\Users\\\\danie\\\\Desktop\\\\Codes\\\\wavy-wity-clean\\\\public\\\\videos\\\\\" | Select-Object Name, @{Name=\"Size_MB\";Expression={[math]::Round\\($_.Length/1MB, 2\\)}})"
+    ]
+  }
+}

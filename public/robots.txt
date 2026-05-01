@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://wavywity.com/sitemap.xml
+
+# Crawl-delay (be polite to bots)
+Crawl-delay: 1
+
+# Block common bot traps
+Disallow: /api/
+Disallow: /*.json$
