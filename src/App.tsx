@@ -6,15 +6,20 @@ import { initGA } from './lib/analytics';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { CookieConsent } from './components/ui/CookieConsent';
 import { BackgroundMusic } from './components/ui/BackgroundMusic';
+import { siteConfig } from './config/siteConfig';
+
+const params = new URLSearchParams(window.location.search);
+const skipGate = params.get('nogate') === 'true';
 
 export default function App() {
-  const [stage, setStage] = useState<'loading' | 'gate' | 'main'>('loading');
+  const [stage, setStage] = useState<'loading' | 'gate' | 'main'>(skipGate ? 'main' : 'loading');
   const [cookiesAccepted, setCookiesAccepted] = useState(
     localStorage.getItem('cookie_consent') === 'accepted'
   );
 
   useEffect(() => {
     initGA(import.meta.env.VITE_GA_MEASUREMENT_ID || '');
+    if (skipGate) return;
     const timer = setTimeout(() => setStage('gate'), 2000);
     return () => clearTimeout(timer);
   }, []);
@@ -80,8 +85,8 @@ export default function App() {
             >
               <MainSite />
             </motion.div>
-            <CookieConsent onAccept={() => setCookiesAccepted(true)} />
-            <BackgroundMusic autoStart cookieBarVisible={!cookiesAccepted} />
+            {siteConfig.features.showCookieConsent && <CookieConsent onAccept={() => setCookiesAccepted(true)} />}
+            {siteConfig.features.showBackgroundMusic && <BackgroundMusic autoStart cookieBarVisible={siteConfig.features.showCookieConsent && !cookiesAccepted} />}
           </>
         )}
       </AnimatePresence>

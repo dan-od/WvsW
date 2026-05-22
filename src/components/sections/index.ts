@@ -8,6 +8,7 @@ export { MoreMusic } from './MoreMusic';
 export { MusicTracklist } from './MusicTracklist';
 export { GallerySection } from './GallerySection';
 export { PerformancesSection } from './PerformancesSection';
+export { EventsSection } from './EventsSection';
 export { AboutSection } from './AboutSection';
 export { MerchSection } from './MerchSection';
 export { ContactSection } from './ContactSection';

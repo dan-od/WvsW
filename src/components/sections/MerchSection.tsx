@@ -5,8 +5,10 @@
  */
 import React from 'react';
 import { EmailSignup } from '../ui/EmailSignup';
+import { siteConfig } from '../../config/siteConfig';
 
 export const MerchSection: React.FC = () => {
+  if (!siteConfig.features.showMerch) return null;
   return (
     <section id="merch" className="bg-cream py-32 px-6 md:px-24 relative overflow-hidden">
       {/* Subtle Watermark */}
@@ -20,11 +22,11 @@ export const MerchSection: React.FC = () => {
         <p className="font-display text-2xl md:text-3xl italic text-gold-deep mb-12">The W.VS.W. Collection</p>
 
         <div className="max-w-md mx-auto">
-          <p className="font-body text-lg text-text-body-light mb-8">
+          <p className="font-body text-lg text-[#4a3f30] mb-8">
             Be the first to know when the limited edition W.VS.W. collection drops. Exclusive vinyl, apparel, and accessories.
           </p>
           <EmailSignup source="merch" buttonText="NOTIFY ME" darkMode={false} />
-          <p className="font-mono text-[0.5rem] text-near-black/25 tracking-widest mt-4">No spam. Unsubscribe anytime.</p>
+          <p className="font-mono text-[0.5rem] text-[#4a3f30]/70 tracking-widest mt-4">No spam. Unsubscribe anytime.</p>
         </div>
       </div>
     </section>

@@ -1,38 +1,37 @@
 /**
  * HeroLanding — Full-screen hero section with responsive video background.
- * Shows the Ghost Mode video loop with separate desktop and mobile sources,
- * poster image fallbacks, a gradient overlay, and the W.VS.W. watermark in the corner.
+ * Renders ONE <video> element (desktop or mobile) based on viewport width
+ * so the browser only downloads a single video file, not both.
  */
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { siteConfig } from '../../config/siteConfig';
 
 export const HeroLanding: React.FC = () => {
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== 'undefined' && window.innerWidth < 768
+  );
+
+  useEffect(() => {
+    const handler = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handler);
+    return () => window.removeEventListener('resize', handler);
+  }, []);
+
   return (
     <section className="relative h-screen w-full overflow-hidden">
       <video
+        key={isMobile ? 'mobile' : 'desktop'}
         autoPlay
         muted
         loop
         playsInline
-        preload="auto"
+        preload="metadata"
         webkit-playsinline="true"
         onCanPlay={(e) => e.currentTarget.play().catch(() => {})}
-        className="w-full h-full object-cover hidden md:block"
-        poster="/images/hero-desktop.png"
+        className="w-full h-full object-cover"
+        poster={isMobile ? siteConfig.images.heroMobilePoster : siteConfig.images.heroDesktopPoster}
       >
-        <source src="/videos/GHOST-MODE.mp4" type="video/mp4" />
-      </video>
-      <video
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="auto"
-        webkit-playsinline="true"
-        onCanPlay={(e) => e.currentTarget.play().catch(() => {})}
-        className="w-full h-full object-cover md:hidden"
-        poster="/images/hero-mobile.png"
-      >
-        <source src="/videos/GHOST-MODE.mp4" type="video/mp4" />
+        <source src={isMobile ? siteConfig.heroVideo.mobile : siteConfig.heroVideo.desktop} type="video/mp4" />
       </video>
       <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60" />
       <div className="absolute bottom-12 right-12 opacity-30">

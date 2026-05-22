@@ -5,16 +5,11 @@
  * and the booking email CTA.
  */
 import React, { useState } from 'react';
+import { siteConfig } from '../../config/siteConfig';
 
 export const PerformancesSection: React.FC = () => {
   const [videoPlaying, setVideoPlaying] = useState(false);
-  const photos = [
-    { src: '/images/gallery/1.png', alt: 'Wavy Witny live moment 1' },
-    { src: '/images/gallery/2.png', alt: 'Wavy Witny live moment 2' },
-    { src: '/images/gallery/3.png', alt: 'Wavy Witny live moment 3' },
-    { src: '/images/gallery/4.png', alt: 'Wavy Witny live moment 4' },
-    { src: '/images/gallery/5.png', alt: 'Wavy Witny live moment 5' },
-  ];
+  const photos = siteConfig.images.performances;
 
   return (
     <section id="performances" className="bg-near-black py-24 px-6 md:px-24">
@@ -48,6 +43,9 @@ export const PerformancesSection: React.FC = () => {
                 <img
                   src="https://img.youtube.com/vi/zZeCl-MvQio/hqdefault.jpg"
                   alt="Album Premier Night recap"
+                  width={480}
+                  height={360}
+                  loading="lazy"
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors" />
@@ -85,7 +83,10 @@ export const PerformancesSection: React.FC = () => {
                 <img
                   src={photo.src}
                   alt={photo.alt}
-                  className="w-full h-full object-cover grayscale-[0.3] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
+                  width={600}
+                  height={400}
+                  loading="lazy"
+                  className="w-full h-full object-cover object-center grayscale-[0.3] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
                 />
               </div>
             ))}
@@ -101,7 +102,7 @@ export const PerformancesSection: React.FC = () => {
             <h3 className="font-display text-[clamp(1.5rem,4vw,2.5rem)] font-bold italic text-cream mb-2">W.VS.W. ALBUM</h3>
             <p className="font-mono text-[0.55rem] text-[rgba(212,200,176,0.35)] tracking-widest uppercase mb-6">15 tracks — streaming everywhere</p>
             <a
-              href="https://www.fvr.fan/wavywitny"
+              href={siteConfig.featuredAlbum.fvrFanUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block px-8 py-3 border border-gold text-gold font-mono text-[0.6rem] tracking-[0.2em] hover:bg-gold hover:text-black transition-all"
@@ -114,8 +115,8 @@ export const PerformancesSection: React.FC = () => {
         {/* Booking Info */}
         <div className="reveal text-center pt-8">
           <p className="font-mono text-[0.55rem] text-[rgba(212,200,176,0.3)] tracking-[0.4em] uppercase mb-4">For Booking Inquiries</p>
-          <a href="mailto:booking@wavywity.com" className="font-display text-xl md:text-2xl italic text-gold border-b border-gold/30 hover:border-gold transition-colors pb-1">
-            booking@wavywity.com
+          <a href={`mailto:${siteConfig.artist.bookingEmail}`} className="font-display text-xl md:text-2xl italic text-gold border-b border-gold/30 hover:border-gold transition-colors pb-1">
+            {siteConfig.artist.bookingEmail}
           </a>
         </div>
 

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
 import { trackGateEnter } from '../lib/analytics';
+import { siteConfig } from '../config/siteConfig';
 
 interface GateProps {
   onEnter: () => void;
@@ -36,11 +37,14 @@ export const Gate: React.FC<GateProps> = ({ onEnter }) => {
       {/* Background Image — responsive crops */}
       <div className="absolute inset-0 z-0">
         <picture>
-          <source media="(max-aspect-ratio: 1/1)" srcSet="/images/hero-mobile.png" />
+          <source media="(max-aspect-ratio: 1/1)" srcSet={siteConfig.images.gateMobile} />
           <img
-            src="/images/hero-desktop.png"
+            src={siteConfig.images.gateDesktop}
             alt=""
-            className="w-full h-full object-cover opacity-40 object-[40%_center] md:object-[40%_center]"
+            width={1920}
+            height={1280}
+            fetchPriority="high"
+            className="w-full h-full object-cover opacity-40 object-[center_25%]"
           />
         </picture>
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80" />

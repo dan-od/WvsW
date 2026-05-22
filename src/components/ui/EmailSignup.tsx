@@ -42,6 +42,12 @@ export const EmailSignup: React.FC<EmailSignupProps> = ({
             tags: ['wvsw-launch', source],
           }),
         });
+      } else {
+        const collected = JSON.parse(localStorage.getItem('collected_emails') || '[]');
+        collected.push({ email, source, timestamp: new Date().toISOString() });
+        localStorage.setItem('collected_emails', JSON.stringify(collected));
+        // eslint-disable-next-line no-console
+        console.info('[EmailSignup pending mailchimp]', { email, source });
       }
 
       trackEmailSignup(source);
@@ -66,20 +72,20 @@ export const EmailSignup: React.FC<EmailSignupProps> = ({
 
   const inputClass = darkMode
     ? 'bg-transparent border-b border-gold/30 py-3 font-mono text-xs tracking-widest text-cream placeholder:text-cream/30 focus:border-gold outline-none transition-colors'
-    : 'bg-transparent border-b border-near-black/30 py-3 font-mono text-xs tracking-widest text-text-dark-warm placeholder:text-near-black/40 focus:border-gold-deep outline-none transition-colors';
+    : 'bg-transparent border-b border-near-black/30 py-3 font-mono text-xs tracking-widest text-[#4a3f30] placeholder:text-[#8a7d6d] focus:border-gold-deep outline-none transition-colors';
 
   const buttonClass = darkMode
-    ? 'px-10 py-3 bg-gold text-black font-mono text-[0.6rem] tracking-[0.2em] hover:bg-gold-deep transition-colors disabled:opacity-50'
-    : 'px-10 py-3 bg-gold text-black font-mono text-[0.6rem] tracking-[0.2em] hover:bg-gold-deep transition-colors disabled:opacity-50';
+    ? 'w-full md:w-auto px-8 py-3 bg-gold text-black font-mono text-[0.6rem] tracking-[0.2em] whitespace-nowrap hover:bg-gold-deep transition-colors disabled:opacity-50'
+    : 'w-full md:w-auto px-8 py-3 bg-gold text-black font-mono text-[0.6rem] tracking-[0.2em] whitespace-nowrap hover:bg-gold-deep transition-colors disabled:opacity-50';
 
   return (
-    <form className="flex flex-col md:flex-row gap-4" onSubmit={handleSubmit}>
+    <form className="flex flex-col md:flex-row gap-4 md:items-center" onSubmit={handleSubmit}>
       <input
         type="email"
         value={email}
         onChange={(e) => { setEmail(e.target.value); setStatus('idle'); }}
         placeholder={placeholder}
-        className={`flex-1 ${inputClass}`}
+        className={`flex-1 min-w-0 ${inputClass}`}
         required
       />
       <button type="submit" disabled={status === 'loading'} className={buttonClass}>

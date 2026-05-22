@@ -4,14 +4,18 @@
  * pull quote, bio text, and key metrics (monthly listeners, streams, releases) on the right.
  */
 import React from 'react';
+import { siteConfig } from '../../config/siteConfig';
 
 export const AboutSection: React.FC = () => {
   return (
     <section id="about" className="relative flex flex-col md:flex-row min-h-screen bg-near-black">
       <div className="w-full md:w-1/2 h-[60vh] md:h-auto relative overflow-hidden">
         <img
-          src="/images/about-photo.png"
-          alt="Wavy Witny portrait"
+          src={siteConfig.images.about}
+          alt={`${siteConfig.artist.name} portrait`}
+          width={800}
+          height={1000}
+          loading="lazy"
           className="w-full h-full object-cover grayscale contrast-125"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-transparent to-near-black hidden md:block" />
@@ -24,7 +28,7 @@ export const AboutSection: React.FC = () => {
         </div>
         <div className="border-l-2 border-gold pl-6 mb-12">
           <p className="font-display text-[clamp(1.2rem,2.5vw,2.2rem)] italic leading-tight text-cream">
-            "Ain't no manual for this life, but I wrote my own script."
+            "{siteConfig.artist.tagline}"
           </p>
         </div>
         <div className="space-y-6 mb-12">
@@ -50,7 +54,7 @@ export const AboutSection: React.FC = () => {
             <p className="font-mono text-[0.6rem] text-gold tracking-[0.3em] uppercase mb-2">What defines your style?</p>
             <p className="font-body text-[1rem] md:text-[1.05rem] text-[rgba(212,200,176,0.6)] leading-[2] font-light">
               The visuals grew naturally with the music. Some days the look is clean, editorial, put together — other days it's all black, leather, raw energy. It just reflects wherever I'm at creatively. I'm grateful to work with{' '}
-              <a href="https://instagram.com/dorottiee" target="_blank" rel="noopener noreferrer" className="text-[rgba(212,200,176,0.6)] hover:text-gold transition-colors">@dorottiee</a>
+              <a href={siteConfig.artist.creativeDirector.url} target="_blank" rel="noopener noreferrer" className="text-[rgba(212,200,176,0.6)] hover:text-gold transition-colors">{siteConfig.artist.creativeDirector.name}</a>
               {' '}on the creative direction — she really understands how to bring the sound to life visually.
             </p>
           </div>

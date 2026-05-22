@@ -7,6 +7,8 @@ import React, { useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ChevronLeft, ChevronRight, Play } from 'lucide-react';
 import { trackVideoPlay } from '../../lib/analytics';
+import { siteConfig } from '../../config/siteConfig';
+import { LazyIframe } from '../ui/LazyIframe';
 
 export const MoreMusic: React.FC = () => {
   const moreMusicRef = useRef<HTMLDivElement>(null);
@@ -14,26 +16,8 @@ export const MoreMusic: React.FC = () => {
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
   const [activePlayer, setActivePlayer] = useState<string | null>(null);
 
-  const releases = [
-    { name: 'W.VS.W.', year: '2026', img: 'https://i.scdn.co/image/ab67616d0000b273c5529bf3be71207d222c17ac', appleId: '1884983423', appleSlug: 'w-vs-w' },
-    { name: 'Wassup', year: '2025', img: 'https://i.scdn.co/image/ab67616d0000b273a651d31e122474114d110476', appleId: '1855070072', appleSlug: 'wassup-single' },
-    { name: 'Ghost Land EP', year: '2025', img: 'https://i.scdn.co/image/ab67616d0000b273bab2846b6ac48e55781befba', appleId: '1809930207', appleSlug: 'ghost-land-ep' },
-    { name: 'Nothing', year: '2025', img: 'https://i.scdn.co/image/ab67616d0000b273072c09e0f5dd7417bbb6644f', appleId: '1824884262', appleSlug: 'nothing-feat-ralph-nyoni-single' },
-    { name: 'Girl of My Dreams', year: '2025', img: 'https://i.scdn.co/image/ab67616d0000b2737a59d6a544566ee53962c70d', appleId: '1796246342', appleSlug: 'girl-of-my-dreams-single' },
-    { name: 'Something To Say', year: '2024', img: 'https://i.scdn.co/image/ab67616d0000b2735282f56dae58dbda0c7d1d49', appleId: '1764625671', appleSlug: 'something-to-say-single' },
-    { name: 'Focus', year: '2023', img: 'https://i.scdn.co/image/ab67616d0000b273f80edc3b9d4d014f5cce6c93', appleId: '1663987646', appleSlug: 'focus-single' },
-    { name: 'Soldier', year: '2021', img: 'https://i.scdn.co/image/ab67616d0000b273c91ac03100666378cb050df3', appleId: '1817151977', appleSlug: 'soldier-feat-jason-chung-single' },
-  ];
-
-  const videos = [
-    { title: 'Ghost Mode (Official Video)', videoId: 'sHRRSNv-E8o', views: 'Premiere' },
-    { title: 'Girl of My Dreams (Official Video)', videoId: 'xT4ynjSqMhg', views: '124K views' },
-    { title: 'No Reply (Official Video)', videoId: '94paoFm7fgQ', views: '10K views' },
-    { title: 'Something To Say (Official Video)', videoId: '5rB31Q_BdwI', views: '5.3K views' },
-    { title: 'Soldier ft. Jason Chung (Official Video)', videoId: '2mMSixaJmOA', views: '3.3K views' },
-    { title: 'Nothing ft. Ralph Nyoni (Official Video)', videoId: 'sDxtmMxInBA', views: '1.7K views' },
-    { title: 'Focus (Official Music Video)', videoId: 'Nst2yFP57_w', views: '424 views' },
-  ];
+  const releases = siteConfig.discography;
+  const videos = siteConfig.videos;
 
   return (
     <section className="bg-black py-24 px-6 md:px-24">
@@ -57,9 +41,9 @@ export const MoreMusic: React.FC = () => {
                   className={`flex-shrink-0 w-[160px] md:w-[180px] group snap-start cursor-pointer p-2 transition-all ${activePlayer === release.appleId ? 'border border-gold/50' : ''}`}
                 >
                   <div className="aspect-square mb-4 group-hover:scale-105 transition-transform duration-500 shadow-xl overflow-hidden">
-                    <img src={release.img} alt={`${release.name} album cover by Wavy Witny`} className="w-full h-full object-cover" />
+                    <img src={release.img} alt={`${release.title} album cover by Wavy Witny`} width={400} height={400} loading="lazy" className="w-full h-full object-cover" />
                   </div>
-                  <p className="font-display text-[1rem] font-bold text-cream group-hover:text-gold transition-colors">{release.name}</p>
+                  <p className="font-display text-[1rem] font-bold text-cream group-hover:text-gold transition-colors">{release.title}</p>
                   <p className="font-mono text-[0.55rem] text-[rgba(212,200,176,0.35)] uppercase tracking-widest">{release.year}</p>
                   <AnimatePresence>
                     {activePlayer === release.appleId && (
@@ -70,14 +54,14 @@ export const MoreMusic: React.FC = () => {
                         transition={{ duration: 0.3 }}
                         className="overflow-hidden mt-2"
                       >
-                        <iframe
+                        <LazyIframe
                           allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write"
                           frameBorder="0"
                           height="175"
                           style={{ width: '100%', overflow: 'hidden', borderRadius: 0, background: 'transparent' }}
                           sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
                           src={`https://embed.music.apple.com/ca/album/${release.appleSlug}/${release.appleId}?theme=dark`}
-                          title={`Play ${release.name}`}
+                          title={`Play ${release.title}`}
                         />
                       </motion.div>
                     )}
@@ -102,7 +86,7 @@ export const MoreMusic: React.FC = () => {
             {videos.slice(0, showAllVideos ? videos.length : 2).map((video, i) => (
               <div key={i} onClick={() => { trackVideoPlay(video.title); setActiveVideo(video.videoId); window.dispatchEvent(new CustomEvent('video-playing', { detail: true })); }} className="group block cursor-pointer">
                 <div className="aspect-video bg-near-black relative overflow-hidden mb-4">
-                  <img src={`https://img.youtube.com/vi/${video.videoId}/hqdefault.jpg`} alt={`${video.title} — Wavy Witny YouTube thumbnail`} className="w-full h-full object-cover" />
+                  <img src={`https://img.youtube.com/vi/${video.videoId}/hqdefault.jpg`} alt={`${video.title} — Wavy Witny YouTube thumbnail`} width={480} height={360} loading="lazy" className="w-full h-full object-cover" />
                   <div className="absolute inset-0 flex items-center justify-center z-10">
                     <div className="w-16 h-16 rounded-full border border-white/20 flex items-center justify-center bg-black/20 backdrop-blur-sm group-hover:bg-gold group-hover:text-black transition-all duration-500">
                       <Play size={24} fill="currentColor" />
@@ -120,7 +104,7 @@ export const MoreMusic: React.FC = () => {
               </div>
             ))}
           </div>
-          {activeVideo && (
+          {activeVideo && siteConfig.features.showVideoModal && (
             <div
               className="fixed inset-0 z-[9997] bg-black/95 flex items-center justify-center p-4 md:p-8"
               onClick={() => { setActiveVideo(null); window.dispatchEvent(new CustomEvent('video-playing', { detail: false })); }}

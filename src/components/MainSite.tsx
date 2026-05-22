@@ -14,10 +14,12 @@ import { MoreMusic } from './sections/MoreMusic';
 import { MusicTracklist } from './sections/MusicTracklist';
 import { GallerySection } from './sections/GallerySection';
 import { PerformancesSection } from './sections/PerformancesSection';
+import { EventsSection } from './sections/EventsSection';
 import { AboutSection } from './sections/AboutSection';
 import { MerchSection } from './sections/MerchSection';
 import { ContactSection } from './sections/ContactSection';
 import { SiteFooter } from './sections/SiteFooter';
+import { siteConfig } from '../config/siteConfig';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -58,7 +60,15 @@ export const MainSite: React.FC = () => {
     };
   }, []);
 
-  const navLinks = ['Music', 'Gallery', 'Performances', 'Merch', 'About', 'Booking'];
+  const navLinks = [
+    'Music',
+    'Gallery',
+    'Performances',
+    ...(siteConfig.features.showEvents ? ['Events'] : []),
+    ...(siteConfig.features.showMerch ? ['Merch'] : []),
+    'About',
+    'Booking',
+  ];
 
   return (
     <div className="relative bg-near-black min-h-screen">
@@ -115,8 +125,9 @@ export const MainSite: React.FC = () => {
       <MusicTracklist />
       <GallerySection />
       <PerformancesSection />
+      {siteConfig.features.showEvents && <EventsSection />}
       <AboutSection />
-      <MerchSection />
+      {siteConfig.features.showMerch && <MerchSection />}
       <ContactSection />
       <SiteFooter />
 

@@ -8,48 +8,17 @@ import React, { useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { trackStreamingClick } from '../../lib/analytics';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { siteConfig } from '../../config/siteConfig';
+import { LazyIframe } from '../ui/LazyIframe';
 
 export const MusicTracklist: React.FC = () => {
   const [showAllTracks, setShowAllTracks] = useState(false);
   const [activePlayer, setActivePlayer] = useState<string | null>(null);
   const singlesRef = useRef<HTMLDivElement>(null);
 
-  const tracks = [
-    { id: '01', title: 'Ghost Mode', credit: '' },
-    { id: '02', title: 'How I Feel', credit: '' },
-    { id: '03', title: 'Trying', credit: '' },
-    { id: '04', title: 'Blueprint', credit: '' },
-    { id: '05', title: 'Wesh', credit: 'ft. KEAN!' },
-    { id: '06', title: 'Wassup', credit: '' },
-    { id: '07', title: 'Ti Cheri', credit: 'ft. JJuZyy' },
-    { id: '08', title: 'With You', credit: 'ft. Nai' },
-    { id: '09', title: 'Slide', credit: '' },
-    { id: '10', title: '4 AM in Toronto', credit: '' },
-    { id: '11', title: 'Matrix', credit: 'ft. TGK' },
-    { id: '12', title: 'On Me', credit: '' },
-    { id: '13', title: 'Matter', credit: 'ft. Ralph Nyoni' },
-    { id: '14', title: 'Worth Living', credit: '' },
-    { id: '15', title: '11.01', credit: '(Outro)' },
-  ];
-
-  const singles = [
-    { title: 'W.VS.W.', year: '2026', img: 'https://i.scdn.co/image/ab67616d0000b273c5529bf3be71207d222c17ac', appleId: '1884983423', appleSlug: 'w-vs-w' },
-    { title: 'Wassup', year: '2025', img: 'https://i.scdn.co/image/ab67616d0000b273a651d31e122474114d110476', appleId: '1855070072', appleSlug: 'wassup-single' },
-    { title: 'Ghost Land EP', year: '2025', img: 'https://i.scdn.co/image/ab67616d0000b273bab2846b6ac48e55781befba', appleId: '1809930207', appleSlug: 'ghost-land-ep' },
-    { title: 'Nothing', year: '2025', img: 'https://i.scdn.co/image/ab67616d0000b273072c09e0f5dd7417bbb6644f', appleId: '1824884262', appleSlug: 'nothing-feat-ralph-nyoni-single' },
-    { title: 'Girl of My Dreams', year: '2025', img: 'https://i.scdn.co/image/ab67616d0000b2737a59d6a544566ee53962c70d', appleId: '1796246342', appleSlug: 'girl-of-my-dreams-single' },
-    { title: 'Something To Say', year: '2024', img: 'https://i.scdn.co/image/ab67616d0000b2735282f56dae58dbda0c7d1d49', appleId: '1764625671', appleSlug: 'something-to-say-single' },
-    { title: 'Focus', year: '2023', img: 'https://i.scdn.co/image/ab67616d0000b273f80edc3b9d4d014f5cce6c93', appleId: '1663987646', appleSlug: 'focus-single' },
-    { title: 'Soldier', year: '2021', img: 'https://i.scdn.co/image/ab67616d0000b273c91ac03100666378cb050df3', appleId: '1817151977', appleSlug: 'soldier-feat-jason-chung-single' },
-  ];
-
-  const platforms = [
-    { name: 'Spotify', url: 'https://open.spotify.com/artist/60FotEIEBnJSB4ZW1sS6Ue' },
-    { name: 'Apple Music', url: 'https://music.apple.com/ca/artist/wavy-witny/1571096565' },
-    { name: 'YouTube', url: 'https://www.youtube.com/@wavywitny' },
-    { name: 'Tidal', url: '#' },
-    { name: 'Audiomack', url: '#' },
-  ];
+  const tracks = siteConfig.tracklist;
+  const singles = siteConfig.discography;
+  const platforms = siteConfig.streamingPlatforms;
 
   return (
     <section id="music" className="bg-black py-24 px-6 md:px-24">
@@ -64,13 +33,13 @@ export const MusicTracklist: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-0">
             {tracks.slice(0, showAllTracks ? tracks.length : 6).map((track) => (
-              <div key={track.id} className="group relative flex items-center justify-between py-5 border-b border-white/5 hover:border-gold/30 transition-all duration-500">
+              <div key={track.num} className="group relative flex items-center justify-between py-5 border-b border-white/5 hover:border-gold/30 transition-all duration-500">
                 <div className="flex items-center gap-6 md:gap-8">
-                  <span className="font-mono text-[1.1rem] md:text-2xl font-bold text-[#c0392b] w-8">{track.id}</span>
+                  <span className="font-mono text-[1.1rem] md:text-2xl font-bold text-[#c0392b] w-8">{String(track.num).padStart(2, '0')}</span>
                   <div>
                     <h3 className="font-display text-[1rem] md:text-[1.1rem] font-bold text-cream group-hover:text-gold transition-colors">{track.title}</h3>
-                    {track.credit && (
-                      <p className="font-mono text-[0.55rem] text-[rgba(212,200,176,0.35)] uppercase tracking-[0.2em] mt-1">{track.credit}</p>
+                    {track.feature && (
+                      <p className="font-mono text-[0.55rem] text-[rgba(212,200,176,0.35)] uppercase tracking-[0.2em] mt-1">ft. {track.feature}</p>
                     )}
                   </div>
                 </div>
@@ -89,12 +58,12 @@ export const MusicTracklist: React.FC = () => {
           </button>
           <div className="flex justify-center mt-8 mb-24">
             <a
-              href="https://open.spotify.com/album/31e8NgM9P2HAgGe6Fc5KIq"
+              href={siteConfig.featuredAlbum.spotifyUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="px-12 py-4 border border-gold text-gold font-mono text-sm tracking-widest hover:bg-gold hover:text-black transition-all duration-300"
             >
-              Stream W.VS.W.
+              Stream {siteConfig.featuredAlbum.title}
             </a>
           </div>
         </div>
@@ -118,7 +87,7 @@ export const MusicTracklist: React.FC = () => {
                   className={`flex-shrink-0 w-[160px] md:w-[200px] snap-start group cursor-pointer p-2 transition-all ${activePlayer === item.appleId ? 'border border-gold/50' : ''}`}
                 >
                   <div className="aspect-square mb-4 overflow-hidden relative shadow-xl">
-                    <img src={item.img} alt={`${item.title} album cover by Wavy Witny`} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                    <img src={item.img} alt={`${item.title} album cover by Wavy Witny`} width={400} height={400} loading="lazy" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                     <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500" />
                   </div>
                   <h4 className="font-display font-bold text-cream text-[1rem] mb-1 group-hover:text-gold transition-colors">{item.title}</h4>
@@ -132,7 +101,7 @@ export const MusicTracklist: React.FC = () => {
                         transition={{ duration: 0.3 }}
                         className="overflow-hidden mt-2"
                       >
-                        <iframe
+                        <LazyIframe
                           allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write"
                           frameBorder="0"
                           height="175"

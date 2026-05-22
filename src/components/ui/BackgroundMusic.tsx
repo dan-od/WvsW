@@ -133,6 +133,37 @@ export const BackgroundMusic: React.FC<BackgroundMusicProps> = ({ autoStart = fa
     return () => window.removeEventListener('video-playing', handleVideoPlaying);
   }, [playing]);
 
+  // Pause when an iframe (e.g. Apple Music) takes focus, resume on return.
+  // Clicking into an iframe blurs the parent window — we use that as a proxy
+  // for "another media surface is now active."
+  useEffect(() => {
+    const handleBlur = () => {
+      if (audioRef.current && playing) {
+        audioRef.current.pause();
+        cancelAnimationFrame(animFrameRef.current);
+        wasPlayingRef.current = true;
+      }
+    };
+
+    const handleFocus = () => {
+      if (audioRef.current && wasPlayingRef.current) {
+        setTimeout(() => {
+          if (document.hasFocus() && audioRef.current) {
+            audioRef.current.play().then(() => animateBars()).catch(() => {});
+            wasPlayingRef.current = false;
+          }
+        }, 500);
+      }
+    };
+
+    window.addEventListener('blur', handleBlur);
+    window.addEventListener('focus', handleFocus);
+    return () => {
+      window.removeEventListener('blur', handleBlur);
+      window.removeEventListener('focus', handleFocus);
+    };
+  }, [playing]);
+
   // Clean up animation frame on unmount
   useEffect(() => {
     return () => cancelAnimationFrame(animFrameRef.current);

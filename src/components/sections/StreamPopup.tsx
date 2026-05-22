@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X } from 'lucide-react';
 import { EmailSignup } from '../ui/EmailSignup';
+import { siteConfig } from '../../config/siteConfig';
 
 export const StreamPopup: React.FC = () => {
   const [show, setShow] = useState(false);
@@ -14,6 +15,7 @@ export const StreamPopup: React.FC = () => {
   const [entered] = useState(Date.now());
 
   useEffect(() => {
+    if (!siteConfig.features.showPopup) return;
     // Check if dismissed within last 7 days
     const dismissedAt = localStorage.getItem('popup_dismissed');
     if (dismissedAt) {
@@ -47,7 +49,7 @@ export const StreamPopup: React.FC = () => {
     setTimeout(() => setShow(false), 2000);
   };
 
-  if (dismissed) return null;
+  if (dismissed || !siteConfig.features.showPopup) return null;
 
   return (
     <AnimatePresence>
